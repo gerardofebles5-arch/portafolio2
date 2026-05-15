@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bancaribe | Conexión Digital C2P</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-bancaribe">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">
+                Bancaribe | Conexión Digital C2P
+            </span>
+            <div class="d-flex align-items-center gap-3">
+                <span id="connection-status" class="badge bg-secondary">Desconectado</span>
+                <span id="last-update" class="text-light small"></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid mt-4">
+        <!-- KPI Cards -->
+        <div class="row mb-4">
+            <div class="col-md-2">
+                <div class="kpi-card">
+                    <div class="kpi-title">Total Transacciones</div>
+                    <div class="kpi-value" id="total-transactions">0</div>
+                    <div class="kpi-trend text-success">
+                        <span id="tps">0</span> TPS
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="kpi-card">
+                    <div class="kpi-title">Tasa de Éxito</div>
+                    <div class="kpi-value text-success" id="success-rate">0%</div>
+                    <div class="kpi-trend">
+                        <span id="completed-count">0</span> completadas
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="kpi-card">
+                    <div class="kpi-title">Fallidas</div>
+                    <div class="kpi-value text-danger" id="failed-rate">0%</div>
+                    <div class="kpi-trend">
+                        <span id="failed-count">0</span> fallidas
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="kpi-card">
+                    <div class="kpi-title">Pendientes</div>
+                    <div class="kpi-value text-warning" id="pending-count">0</div>
+                    <div class="kpi-trend">
+                        En procesamiento
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="kpi-card">
+                    <div class="kpi-title">Latencia Promedio</div>
+                    <div class="kpi-value" id="avg-latency">0ms</div>
+                    <div class="kpi-trend text-success">
+                        < 500ms objetivo
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="kpi-card">
+                    <div class="kpi-title">Retry Queue</div>
+                    <div class="kpi-value text-info" id="retry-queue">0</div>
+                    <div class="kpi-trend">
+                        <span id="retry-success">0</span> reintentos OK
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="row">
+            <!-- Charts Section -->
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">📊 Transacciones por Minuto</h5>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-primary active" onclick="setChartPeriod('1m')">1M</button>
+                            <button class="btn btn-outline-primary" onclick="setChartPeriod('5m')">5M</button>
+                            <button class="btn btn-outline-primary" onclick="setChartPeriod('15m')">15M</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="transactionsChart" height="200"></canvas>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">🥧 Distribución de Estados</h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="statusChart" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">⚡ Rendimiento del Engine</h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="engineChart" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- System Status -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0">🔧 Estado del Sistema</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="system-status-item">
+                            <span class="status-indicator bg-success"></span>
+                            <span>Event Store</span>
+                            <span class="badge bg-success float-end">OK</span>
+                        </div>
+                        <div class="system-status-item">
+                            <span class="status-indicator bg-success"></span>
+                            <span>Retry Queue</span>
+                            <span class="badge bg-success float-end" id="queue-status">OK</span>
+                        </div>
+                        <div class="system-status-item">
+                            <span class="status-indicator bg-success"></span>
+                            <span>Reconciliation Engine</span>
+                            <span class="badge bg-success float-end">OK</span>
+                        </div>
+                        <div class="system-status-item">
+                            <span class="status-indicator bg-success" id="ws-indicator"></span>
+                            <span>WebSocket</span>
+                            <span class="badge bg-secondary float-end" id="ws-status">Desconectado</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alerts -->
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between">
+                        <h6 class="mb-0">🚨 Alertas Recientes</h6>
+                        <span class="badge bg-danger" id="alert-count">0</span>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="alerts-container" class="alerts-list">
+                            <div class="alert-item text-muted text-center py-3">
+                                No hay alertas recientes
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0">📝 Transacciones Recientes</h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="transactions-list" class="transactions-list">
+                            <div class="transaction-item text-muted text-center py-3">
+                                Esperando transacciones...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Simulation Controls -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0">🎮 Controles de Simulación</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <span class="input-group-text">Cantidad</span>
+                                    <input type="number" class="form-control" id="sim-count" value="50" min="1" max="1000">
+                                    <button class="btn btn-primary" onclick="simulateBulk()">
+                                        🚀 Simular Pagos
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-outline-success" onclick="refreshMetrics()">
+                                    🔄 Actualizar Métricas
+                                </button>
+                                <button class="btn btn-outline-info" onclick="waitForCompletion()">
+                                    ⏳ Esperar Completación
+                                </button>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <span class="badge bg-info" id="simulation-status">Listo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-5 py-3 text-center text-muted border-top">
+        <small>
+            Bancaribe MVP Conciliación C2P &copy; 2025 | 
+            <a href="http://localhost:8000/docs" target="_blank">API Docs</a> |
+            WebSocket: ws://localhost:8765
+        </small>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

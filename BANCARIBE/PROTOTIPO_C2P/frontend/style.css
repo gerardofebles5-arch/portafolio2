@@ -1,0 +1,221 @@
+/* Bancaribe C2P Dashboard Styles */
+
+:root {
+    --bancaribe-blue: #0066CC;
+    --bancaribe-dark: #0052A3;
+    --bancaribe-light: #3385D6;
+    --success-green: #10B981;
+    --danger-red: #EF4444;
+    --warning-yellow: #F59E0B;
+    --info-cyan: #06B6D4;
+}
+
+body {
+    background-color: #f5f7fa;
+    font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.bg-bancaribe {
+    background: linear-gradient(135deg, var(--bancaribe-blue) 0%, var(--bancaribe-light) 100%);
+}
+
+/* KPI Cards */
+.kpi-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    border-left: 4px solid var(--bancaribe-blue);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+}
+
+.kpi-title {
+    font-size: 0.85rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+.kpi-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--bancaribe-blue);
+    margin-bottom: 0.25rem;
+}
+
+.kpi-trend {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.card-header {
+    background: white;
+    border-bottom: 1px solid #e9ecef;
+    border-radius: 12px 12px 0 0 !important;
+    padding: 1rem 1.25rem;
+    font-weight: 600;
+}
+
+/* System Status */
+.system-status-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.system-status-item:last-child {
+    border-bottom: none;
+}
+
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 0.75rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Alerts */
+.alerts-list {
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.alert-item {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e9ecef;
+    font-size: 0.9rem;
+}
+
+.alert-item:last-child {
+    border-bottom: none;
+}
+
+.alert-item.error {
+    background-color: #fff5f5;
+    border-left: 3px solid var(--danger-red);
+}
+
+.alert-item.warning {
+    background-color: #fffbeb;
+    border-left: 3px solid var(--warning-yellow);
+}
+
+.alert-item.info {
+    background-color: #eff6ff;
+    border-left: 3px solid var(--info-cyan);
+}
+
+.alert-item.success {
+    background-color: #f0fdf4;
+    border-left: 3px solid var(--success-green);
+}
+
+.alert-timestamp {
+    font-size: 0.75rem;
+    color: #6c757d;
+}
+
+/* Transactions List */
+.transactions-list {
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.transaction-item {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e9ecef;
+    font-size: 0.9rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.transaction-item:last-child {
+    border-bottom: none;
+}
+
+.transaction-id {
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.transaction-amount {
+    font-weight: 600;
+    color: var(--bancaribe-blue);
+}
+
+.transaction-status {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.status-initiated { background-color: #e9ecef; color: #495057; }
+.status-processing { background-color: #fff3cd; color: #856404; }
+.status-completed { background-color: #d4edda; color: #155724; }
+.status-failed { background-color: #f8d7da; color: #721c24; }
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Connection Status */
+#connection-status {
+    transition: all 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .kpi-value {
+        font-size: 1.5rem;
+    }
+    
+    .kpi-card {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Animation for updates */
+@keyframes highlight {
+    0% { background-color: rgba(0, 123, 255, 0.2); }
+    100% { background-color: transparent; }
+}
+
+.updated {
+    animation: highlight 1s ease-out;
+}

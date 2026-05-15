@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0066CC">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Bancaribe | Conexión Digital</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Login Screen -->
+        <div class="login-screen" id="loginScreen">
+            <div class="login-content">
+                <div class="login-logo">Bancaribe</div>
+                <div class="login-subtitle">Conexión Digital</div>
+                
+                <form class="login-form" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label>Usuario</label>
+                        <input type="text" class="form-input" placeholder="Usuario o cédula" id="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Contraseña</label>
+                        <input type="password" class="form-input" placeholder="Contraseña" id="password" required>
+                    </div>
+                    <button type="submit" class="btn-primary btn-full">Iniciar Sesión</button>
+                </form>
+                
+                <div class="login-footer">
+                    <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                    <div class="register-link">
+                        ¿No tienes cuenta? <a href="#">Regístrate</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main App (hidden until login) -->
+        <div class="main-app" id="mainApp" style="display: none;">
+            <!-- Header -->
+            <header class="app-header">
+                <div class="header-content">
+                    <div class="logo">Bancaribe</div>
+                    <div class="menu-btn" onclick="showMenu()">☰</div>
+                </div>
+            </header>
+
+        <!-- Balance Card -->
+        <div class="balance-card">
+            <div class="balance-label">Saldo Disponible</div>
+            <div class="balance-amount">Bs. 12,450.00</div>
+            <div class="balance-account">•••• 4521</div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <div class="action-item" onclick="showQRScanner()">
+                <div class="action-icon">📷</div>
+                <div class="action-label">Escanear QR</div>
+            </div>
+            <div class="action-item" onclick="showPayment()">
+                <div class="action-icon">💳</div>
+                <div class="action-label">Pagar</div>
+            </div>
+            <div class="action-item" onclick="showTransfer()">
+                <div class="action-icon">💸</div>
+                <div class="action-label">Transferir</div>
+            </div>
+            <div class="action-item" onclick="showRecharge()">
+                <div class="action-icon">📱</div>
+                <div class="action-label">Recargar</div>
+            </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="transactions-section">
+            <div class="section-title">Transacciones Recientes</div>
+            <div class="transaction-list">
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-name">Farmatodo</div>
+                        <div class="transaction-date">Hoy, 10:30 AM</div>
+                    </div>
+                    <div class="transaction-amount">-Bs. 250.00</div>
+                </div>
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-name">Pago Móvil</div>
+                        <div class="transaction-date">Ayer, 3:45 PM</div>
+                    </div>
+                    <div class="transaction-amount">-Bs. 500.00</div>
+                </div>
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-name">Depósito</div>
+                        <div class="transaction-date">Ayer, 9:00 AM</div>
+                    </div>
+                    <div class="transaction-amount positive">+Bs. 1,000.00</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <div class="nav-item active">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">Inicio</div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">💳</div>
+                <div class="nav-label">Tarjetas</div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">📱</div>
+                <div class="nav-label">Pago Móvil</div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">👤</div>
+                <div class="nav-label">Perfil</div>
+            </div>
+        </nav>
+        </div>
+    </div>
+
+    <!-- Side Menu -->
+    <div class="side-menu" id="sideMenu">
+        <div class="menu-header">
+            <div class="user-info">
+                <div class="user-avatar">👤</div>
+                <div class="user-name">Juan Pérez</div>
+                <div class="user-phone">0414-123-4567</div>
+            </div>
+            <div class="menu-close" onclick="closeMenu()">✕</div>
+        </div>
+        <div class="menu-items">
+            <div class="menu-item" onclick="showSection('home')">
+                <span class="menu-icon">🏠</span>
+                <span>Inicio</span>
+            </div>
+            <div class="menu-item" onclick="showSection('transfers')">
+                <span class="menu-icon">💸</span>
+                <span>Transferencias</span>
+            </div>
+            <div class="menu-item" onclick="showSection('cards')">
+                <span class="menu-icon">💳</span>
+                <span>Mis Tarjetas</span>
+            </div>
+            <div class="menu-item" onclick="showSection('recharge')">
+                <span class="menu-icon">📱</span>
+                <span>Recargas</span>
+            </div>
+            <div class="menu-item" onclick="showSection('history')">
+                <span class="menu-icon">📋</span>
+                <span>Historial</span>
+            </div>
+            <div class="menu-item" onclick="showSection('profile')">
+                <span class="menu-icon">👤</span>
+                <span>Perfil</span>
+            </div>
+            <div class="menu-item" onclick="showSection('support')">
+                <span class="menu-icon">❓</span>
+                <span>Ayuda</span>
+            </div>
+            <div class="menu-item logout" onclick="handleLogout()">
+                <span class="menu-icon">🚪</span>
+                <span>Cerrar Sesión</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- QR Scanner Modal -->
+    <div class="modal" id="qrModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Escanear QR</div>
+                <div class="modal-close" onclick="closeModal()">✕</div>
+            </div>
+            <div class="qr-scanner">
+                <div class="scanner-frame">
+                    <div class="scanner-line"></div>
+                </div>
+                <div class="scanner-text">Apunta al código QR</div>
+            </div>
+            <button class="btn-primary" onclick="simulateScan()">Simular Escaneo</button>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Realizar Pago</div>
+                <div class="modal-close" onclick="closeModal()">✕</div>
+            </div>
+            <form class="payment-form">
+                <div class="form-group">
+                    <label>Monto</label>
+                    <input type="number" class="form-input" placeholder="Bs. 0.00">
+                </div>
+                <div class="form-group">
+                    <label>Destinatario</label>
+                    <input type="text" class="form-input" placeholder="Teléfono o cédula">
+                </div>
+                <div class="form-group">
+                    <label>Referencia</label>
+                    <input type="text" class="form-input" placeholder="Opcional">
+                </div>
+                <button type="button" class="btn-primary" onclick="processPayment()">Pagar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Transfer Modal -->
+    <div class="modal" id="transferModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Transferir</div>
+                <div class="modal-close" onclick="closeModal()">✕</div>
+            </div>
+            <form class="payment-form">
+                <div class="form-group">
+                    <label>De</label>
+                    <select class="form-input">
+                        <option>Cuenta Ahorros •••• 4521</option>
+                        <option>Cuenta Corriente •••• 7890</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Para</label>
+                    <input type="text" class="form-input" placeholder="Cédula o teléfono">
+                </div>
+                <div class="form-group">
+                    <label>Banco</label>
+                    <select class="form-input">
+                        <option>Bancaribe (0105)</option>
+                        <option>Banesco (0134)</option>
+                        <option>Mercantil (0102)</option>
+                        <option>Provincial (0108)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Monto</label>
+                    <input type="number" class="form-input" placeholder="Bs. 0.00">
+                </div>
+                <button type="button" class="btn-primary" onclick="processTransfer()">Transferir</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Recharge Modal -->
+    <div class="modal" id="rechargeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Recargar</div>
+                <div class="modal-close" onclick="closeModal()">✕</div>
+            </div>
+            <form class="payment-form">
+                <div class="form-group">
+                    <label>Tipo</label>
+                    <select class="form-input">
+                        <option>Teléfono Móvil</option>
+                        <option>TV Paga</option>
+                        <option>Internet</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Operador</label>
+                    <select class="form-input">
+                        <option>Movistar</option>
+                        <option>Digitel</option>
+                        <option>Movilnet</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Número</label>
+                    <input type="text" class="form-input" placeholder="0414-XXX-XXXX">
+                </div>
+                <div class="form-group">
+                    <label>Monto</label>
+                    <input type="number" class="form-input" placeholder="Bs. 0.00">
+                </div>
+                <button type="button" class="btn-primary" onclick="processRecharge()">Recargar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div class="modal" id="historyModal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <div class="modal-title">Historial de Transacciones</div>
+                <div class="modal-close" onclick="closeModal()">✕</div>
+            </div>
+            <div class="history-filters">
+                <select class="form-input" id="historyFilter">
+                    <option value="all">Todas</option>
+                    <option value="payments">Pagos</option>
+                    <option value="transfers">Transferencias</option>
+                    <option value="recharges">Recargas</option>
+                </select>
+            </div>
+            <div class="history-list" id="historyList">
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-name">Farmatodo</div>
+                        <div class="transaction-date">Hoy, 10:30 AM</div>
+                    </div>
+                    <div class="transaction-amount">-Bs. 250.00</div>
+                </div>
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-name">Transferencia a María</div>
+                        <div class="transaction-date">Ayer, 3:45 PM</div>
+                    </div>
+                    <div class="transaction-amount">-Bs. 500.00</div>
+                </div>
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-name">Recarga Movistar</div>
+                        <div class="transaction-date">Ayer, 9:00 AM</div>
+                    </div>
+                    <div class="transaction-amount">-Bs. 100.00</div>
+                </div>
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-name">Depósito</div>
+                        <div class="transaction-date">Hace 2 días</div>
+                    </div>
+                    <div class="transaction-amount positive">+Bs. 1,000.00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cards Modal -->
+    <div class="modal" id="cardsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Mis Tarjetas</div>
+                <div class="modal-close" onclick="closeModal()">✕</div>
+            </div>
+            <div class="cards-list">
+                <div class="card-item">
+                    <div class="card-info">
+                        <div class="card-type">Visa Débito</div>
+                        <div class="card-number">•••• 4521</div>
+                        <div class="card-balance">Bs. 12,450.00</div>
+                    </div>
+                    <div class="card-status active">Activa</div>
+                </div>
+                <div class="card-item">
+                    <div class="card-info">
+                        <div class="card-type">Visa Crédito</div>
+                        <div class="card-number">•••• 7890</div>
+                        <div class="card-balance">Bs. 5,200.00</div>
+                    </div>
+                    <div class="card-status active">Activa</div>
+                </div>
+            </div>
+            <button class="btn-primary" onclick="alert('Agregar tarjeta - En desarrollo')">Agregar Tarjeta</button>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div class="modal" id="profileModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Perfil</div>
+                <div class="modal-close" onclick="closeModal()">✕</div>
+            </div>
+            <div class="profile-content">
+                <div class="profile-avatar">👤</div>
+                <div class="profile-name">Juan Pérez</div>
+                <div class="profile-phone">0414-123-4567</div>
+                <div class="profile-email">juan.perez@email.com</div>
+                
+                <div class="profile-section">
+                    <div class="section-title">Configuración</div>
+                    <div class="setting-item">
+                        <span>Notificaciones</span>
+                        <input type="checkbox" checked>
+                    </div>
+                    <div class="setting-item">
+                        <span>Biometría</span>
+                        <input type="checkbox">
+                    </div>
+                    <div class="setting-item">
+                        <span>Modo oscuro</span>
+                        <input type="checkbox">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Support Modal -->
+    <div class="modal" id="supportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Ayuda y Soporte</div>
+                <div class="modal-close" onclick="closeModal()">✕</div>
+            </div>
+            <div class="support-content">
+                <div class="support-item" onclick="alert('Llamando a soporte...')">
+                    <div class="support-icon">📞</div>
+                    <div class="support-info">
+                        <div class="support-title">Llamar al Soporte</div>
+                        <div class="support-desc">0800-BANCARIBE</div>
+                    </div>
+                </div>
+                <div class="support-item" onclick="alert('Abriendo chat...')">
+                    <div class="support-icon">💬</div>
+                    <div class="support-info">
+                        <div class="support-title">Chat en Vivo</div>
+                        <div class="support-desc">Disponible 24/7</div>
+                    </div>
+                </div>
+                <div class="support-item" onclick="alert('Abriendo FAQ...')">
+                    <div class="support-icon">❓</div>
+                    <div class="support-info">
+                        <div class="support-title">Preguntas Frecuentes</div>
+                        <div class="support-desc">Encuentra respuestas rápidas</div>
+                    </div>
+                </div>
+                <div class="support-item" onclick="alert('Reportando problema...')">
+                    <div class="support-icon">🐛</div>
+                    <div class="support-info">
+                        <div class="support-title">Reportar Problema</div>
+                        <div class="support-desc">Envía un reporte técnico</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="mobile.js"></script>
+</body>
+</html>

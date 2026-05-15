@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: bancaribe-api
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python scripts/run_server.py
+    envVars:
+      - key: PORT
+        value: 8000
